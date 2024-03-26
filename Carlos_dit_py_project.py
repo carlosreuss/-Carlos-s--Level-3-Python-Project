@@ -74,7 +74,7 @@ class Quiz_API:
             except:
                 print("please enter a valid number")
 
-    def difficulty_selector(self):
+    def cat_selector(self):
         '''This function is used to select the level of question for the user'''
         while True:
             try:
@@ -92,6 +92,3 @@ class Quiz_API:
 
 if __name__ == "__main__":
     pass
-
-
-test_sss = 5555
