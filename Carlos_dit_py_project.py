@@ -99,23 +99,22 @@ class Quiz_API:
 
     def get_question(self):
         '''gets the questions from the API'''
-        question = questions()
         url = self.create_url()
         data = self.make_request(url)
         if data:
             questions_data = data.get('results', [])
-            questions_instances = []
+            question_formated = []
             for question_data in questions_data:
                 category = question_data['category']
                 difficulty = question_data['difficulty']
                 correct_ans = question_data['correct_answer']
                 incorrect_ans = question_data['incorrect_answers']
-                questions_instances.append(question(category, difficulty, correct_ans, incorrect_ans))
-            return questions_instances
+                question_formated.append(Questions(category, difficulty, correct_ans, incorrect_ans))
+            return question_formated
         else:
             return []
 
-class questions:
+class Questions:
 
     def __init__(self, category, difficulty, correct_ans, incorrect_ans):
         self.type = category
@@ -138,7 +137,6 @@ def menu():
 
             if user_choice == 1:
                 questions = api_quiz.get_question() # Call the method with the instance
-                print(questions)
             elif user_choice == 2:
                 print("---bye---")
                 break
