@@ -38,11 +38,10 @@ class Quiz_API:
         else:
             print("whoops somthing went wrong")
 
-    def create_url(self):
-        pass
+
 
     def num_question_selector(self):
-        ''' this function is used to select how many questions the user wants to do'''
+        ''' this function is used to select how many questions the user wants to do and then returns the url required to create the overall url that gets sent to the api'''
         print("")
         while True:
             try:
@@ -90,5 +89,61 @@ class Quiz_API:
             except:
                 print("please enter a valid number")
 
+    def create_url(self):
+        print("")
+        num_url = self.num_question_selector()
+        dif_url = self.difficulty_selector()
+        cat_url = self.cat_selector()
+        url = self.base_url + num_url + dif_url + cat_url
+        return url
+
+    def get_question(self):
+        '''gets the questions from the API'''
+        question = questions()
+        url = self.create_url()
+        data = self.make_request(url)
+        if data:
+            questions_data = data.get('results', [])
+            questions_instances = []
+            for question_data in questions_data:
+                category = question_data['category']
+                difficulty = question_data['difficulty']
+                correct_ans = question_data['correct_answer']
+                incorrect_ans = question_data['incorrect_answers']
+                questions_instances.append(question(category, difficulty, correct_ans, incorrect_ans))
+            return questions_instances
+        else:
+            return []
+
+class questions:
+
+    def __init__(self, category, difficulty, correct_ans, incorrect_ans):
+        self.type = category
+        self.difficulty = difficulty
+        self.correct_ans = correct_ans
+        self.incorrect_ans = incorrect_ans
+        
+
+def menu():
+    '''this functon is the menu system and it creates an instance and allows the user to navigate arround the app'''
+    api_quiz = Quiz_API() # Create an instance of Quiz_API
+
+    while True:
+        try:
+            print("Welcome to The Trivia")
+            print("")
+            print("Option 1: Start quiz\nOption 2: Quit app")
+
+            user_choice = int(input(": "))
+
+            if user_choice == 1:
+                questions = api_quiz.get_question() # Call the method with the instance
+                print(questions)
+            elif user_choice == 2:
+                print("---bye---")
+                break
+        except ValueError:
+            print("Please enter a valid answer.")
+
 if __name__ == "__main__":
-    print("test2")
+    menu()
