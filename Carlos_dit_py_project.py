@@ -101,15 +101,15 @@ class Quiz_API:
         '''gets the questions from the API'''
         url = self.create_url()
         data = self.make_request(url)
-        if data:
+        if data: #as the data recvied is in a dictonary, if data: cheacks in their is thing in it and retuns true, an emty dictonary will return false
             questions_data = data.get('results', [])
             question_formated = []
-            for question_data in questions_data:
+            for question_data in questions_data: #here we are looping through the data recived from the api and matching the infomation up their in program varable
                 category = question_data['category']
                 difficulty = question_data['difficulty']
                 correct_ans = question_data['correct_answer']
                 incorrect_ans = question_data['incorrect_answers']
-                question_formated.append(Questions(category, difficulty, correct_ans, incorrect_ans))
+                question_formated.append(Questions(category, difficulty, correct_ans, incorrect_ans))#here those varables get put in to the order of how the class Question is set up
             return question_formated
         else:
             return []
