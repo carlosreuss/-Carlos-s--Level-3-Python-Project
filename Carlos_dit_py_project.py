@@ -1,4 +1,5 @@
 import requests
+import random
 
 class Quiz_API:
     '''this calls calls the api and GETS the data called
@@ -58,7 +59,7 @@ class Quiz_API:
                 print("please enter a valid number")
 
     def difficulty_selector(self):
-        '''This function is used to select the level of question for the user'''
+        '''This function is used to select the level of question for the user by returning the url fragment that corosponds to the users choice'''
         while True:
             try:
                 difficulty = int(input("Option 1: easy\n Options 2: meduim\n Option 3: hard\n\nPlease enter the corosponding number for the option you want\n"))
@@ -74,7 +75,7 @@ class Quiz_API:
                 print("please enter a valid number")
 
     def cat_selector(self):
-        '''This function is used to select the level of question for the user'''
+        '''This function is used to select the level of question for the user by returning the url fragment that corrosponds to the users choice'''
         while True:
             try:
                 difficulty = int(input("Option 1: Sports\n Options 2: Maths\n Option 3: Vehicles\n\nPlease enter the corosponding number for the option you want\n"))
@@ -90,6 +91,8 @@ class Quiz_API:
                 print("please enter a valid number")
 
     def create_url(self):
+        '''this function has three varbles that store the three diffrent url fragments that corrosponed to what the user has selected to filter the questions.
+        it then combinds then all together with the base url'''
         print("")
         num_url = self.num_question_selector()
         dif_url = self.difficulty_selector()
@@ -98,34 +101,55 @@ class Quiz_API:
         return url
 
     def get_question(self):
-        '''gets the questions from the API'''
+        '''gets the questions from the API.
+    it does this by getting the url that was constructed in the create url function,
+    then it sends that url to the get requests function which makes a request to the API,
+    the API then returns the info and store it in the data var. then it gets formatted into the format of the question'''
         url = self.create_url()
         data = self.make_request(url)
-        if data: #as the data recvied is in a dictonary, if data: cheacks in their is thing in it and retuns true, an emty dictonary will return false
-            questions_data = data.get('results', [])
-            question_formated = []
-            for question_data in questions_data: #here we are looping through the data recived from the api and matching the infomation up their in program varable
-                category = question_data['category']
-                difficulty = question_data['difficulty']
-                correct_ans = question_data['correct_answer']
-                incorrect_ans = question_data['incorrect_answers']
-                question_formated.append(Questions(category, difficulty, correct_ans, incorrect_ans))#here those varables get put in to the order of how the class Question is set up
-            return question_formated
+        if data: #as the data received is in a dictionary, if data: checks if there is anything in it and returns true, an empty dictionary will return false
+            questions = []
+
+            for question_data in data['results']:
+                type = question_data["type"]
+                difficulty = question_data["difficulty"]
+                category = question_data["category"]
+                correct_ans = question_data["correct_answer"]
+                incorrect_ans = question_data["incorrect_answers"]
+                questions.append([type, difficulty, category, correct_ans, incorrect_ans])  # Append as a list
+            return(questions)
         else:
             return []
 
 class Questions:
+    '''this class is used to orgnze the questions by the 4 diffrent aspects they inclued
+    self.type = catgory
+    self.difficulty = difficulty
+    self.correct_ans =correct_ans
+    self.incorrect_ans = incorrect_ans'''
 
-    def __init__(self, category, difficulty, correct_ans, incorrect_ans):
-        self.type = category
+    def __init__(self, type, difficulty, category, correct_ans, incorrect_ans):
+        self.type = type
         self.difficulty = difficulty
+        self.category = category
         self.correct_ans = correct_ans
         self.incorrect_ans = incorrect_ans
         
 
+    def shuffle_questions(self):
+        answers = [self.correct_ans] + self.incorrect_ans
+        random.shuffle(answers)
+        correct_index = answers.index(self.correct_ans)
+        return answers, correct_index
+
+    def display_questions(self):
+        shuffled_answers, correct_index = self.shuffle_questions()
+        print("---------")
+        print(shuffled_answers, correct_index)
+
+
 def menu():
-    '''this functon is the menu system and it creates an instance and allows the user to navigate arround the app'''
-    api_quiz = Quiz_API() # Create an instance of Quiz_API
+    api_quiz = Quiz_API()  # Create an instance of Quiz_API
 
     while True:
         try:
@@ -136,12 +160,20 @@ def menu():
             user_choice = int(input(": "))
 
             if user_choice == 1:
-                questions = api_quiz.get_question() # Call the method with the instance
+                questions = api_quiz.get_question()  # Call the method with the instance
+                for question_data in questions:
+                    question = Questions(*question_data)
+                    question.display_questions()
+ 
             elif user_choice == 2:
                 print("---bye---")
                 break
+            else:
+                print("Please enter a valid option (1 or 2)")
         except ValueError:
-            print("Please enter a valid answer.")
+            print("Please enter a valid integer")
+        except Exception as e:
+            print("An unexpected error occurred:", e)
 
 if __name__ == "__main__":
     menu()
