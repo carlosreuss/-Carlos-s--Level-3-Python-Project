@@ -114,9 +114,10 @@ class Quiz_API:
                 type = question_data["type"]
                 difficulty = question_data["difficulty"]
                 category = question_data["category"]
+                quest = question_data["question"]
                 correct_ans = question_data["correct_answer"]
                 incorrect_ans = question_data["incorrect_answers"]
-                questions.append([type, difficulty, category, correct_ans, incorrect_ans])  # Append as a list
+                questions.append([type, difficulty, category, quest, correct_ans, incorrect_ans])  # Append as a list
             return(questions)
         else:
             return []
@@ -128,10 +129,11 @@ class Questions:
     self.correct_ans =correct_ans
     self.incorrect_ans = incorrect_ans'''
 
-    def __init__(self, type, difficulty, category, correct_ans, incorrect_ans):
+    def __init__(self, type, difficulty, category, quest, correct_ans, incorrect_ans):
         self.type = type
         self.difficulty = difficulty
         self.category = category
+        self.quest = quest
         self.correct_ans = correct_ans
         self.incorrect_ans = incorrect_ans
         
@@ -145,7 +147,37 @@ class Questions:
     def display_questions(self):
         shuffled_answers, correct_index = self.shuffle_questions()
         print("---------")
-        print(shuffled_answers, correct_index)
+        print(f"The question: {self.quest}")
+        print("")
+        for i in range(len(shuffled_answers)):
+            print(f"{i + 1}: {shuffled_answers[i]}")
+            i = i + 1
+        while True:
+            try:
+                user_ans = int(input("\nEnter the number corrosponding to the answer e.g. 2\b-->:"))
+
+                user_ans = user_ans - 1
+
+                if 0 <= user_ans and user_ans <= 3:
+                    if user_ans == correct_index:
+                        print("congrats you got it correct")
+                        break
+                    else:
+                        print("unluckly, incorrect")
+                        break
+                elif 0>= user_ans or user_ans >=3:
+                    print("")
+                    print("please enter a number that is in the valid range of options: 1-4 or 1-2")
+            except ValueError:
+                print("Please enter a valid integer")
+            except Exception as e:
+                print("An unexpected error occurred:", e)
+
+
+def quiz(questions):
+    for question_data in questions: #looping through the data recived from the api class
+        question = Questions(*question_data)
+        question.display_questions()
 
 
 def menu():
@@ -161,10 +193,7 @@ def menu():
 
             if user_choice == 1:
                 questions = api_quiz.get_question()  # Call the method with the instance
-                for question_data in questions:
-                    question = Questions(*question_data)
-                    question.display_questions()
- 
+                quiz(questions)
             elif user_choice == 2:
                 print("---bye---")
                 break
