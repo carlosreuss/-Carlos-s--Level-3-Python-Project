@@ -54,9 +54,11 @@ class Quiz_API:
                 elif amount == 3:
                     return self.twenty_question
                 else:
-                    continue
-            except:
-                print("please enter a valid number")
+                    print("please enter a valid interger within the range of 1-3")
+            except ValueError:
+                print("Please enter a valid integer")
+            except Exception as e:
+                print("An unexpected error occurred:", e)
 
     def difficulty_selector(self):
         '''This function is used to select the level of question for the user by returning the url fragment that corosponds to the users choice'''
@@ -70,9 +72,11 @@ class Quiz_API:
                 elif difficulty == 3:
                     return self.hard
                 else:
-                    continue
-            except:
-                print("please enter a valid number")
+                    print("please enter a valid interger within the range of 1-3")
+            except ValueError:
+                print("Please enter a valid integer")
+            except Exception as e:
+                print("An unexpected error occurred:", e)
 
     def cat_selector(self):
         '''This function is used to select the level of question for the user by returning the url fragment that corrosponds to the users choice'''
@@ -86,9 +90,11 @@ class Quiz_API:
                 elif difficulty == 3:
                     return self.vehicle_cat
                 else:
-                    continue
-            except:
-                print("please enter a valid number")
+                    print("please enter a valid interger within the range of 1-3")
+            except ValueError:
+                print("Please enter a valid integer")
+            except Exception as e:
+                print("An unexpected error occurred:", e)
 
     def create_url(self):
         '''this function has three varbles that store the three diffrent url fragments that corrosponed to what the user has selected to filter the questions.
@@ -161,10 +167,10 @@ class Questions:
                 if 0 <= user_ans and user_ans <= 3:
                     if user_ans == correct_index:
                         print("congrats you got it correct")
-                        break
+                        return 1
                     else:
                         print("unluckly, incorrect")
-                        break
+                        return 0
                 elif 0>= user_ans or user_ans >=3:
                     print("")
                     print("please enter a number that is in the valid range of options: 1-4 or 1-2")
@@ -175,10 +181,30 @@ class Questions:
 
 
 def quiz(questions):
+    ans_correct = 0
     for question_data in questions: #looping through the data recived from the api class
         question = Questions(*question_data)
-        question.display_questions()
-
+        ans_cor = question.display_questions()
+        ans_correct = ans_correct + ans_cor
+    decs_per_correct = ans_correct / len(questions)
+    percentage_correct = decs_per_correct * 100
+    print("")
+    if percentage_correct >= 80:
+        print(f"Well Done, you got {ans_correct} out of {len(questions)} which is outstanding\n that is {percentage_correct}% correct")
+    elif 70 <= percentage_correct and percentage_correct <= 79:
+        print(f"Nice Work, you got {ans_correct} out of {len(questions)} which is great\n that is {percentage_correct}% correct")
+    elif 60 <= percentage_correct and percentage_correct <= 69:
+        print(f"Good Stuff, you got {ans_correct} out of {len(questions)} which is good\n that is {percentage_correct}% correct")
+    elif 50 <= percentage_correct and percentage_correct <= 59:
+        print(f"Nice, you got {ans_correct} out of {len(questions)} which is good\n that is {percentage_correct}% correct")
+    elif 10 <= percentage_correct and percentage_correct <= 49:
+        print(f"good atempet, you got {ans_correct} out of {len(questions)} which is allright\n that is {percentage_correct}% correct")
+    elif 0 <= percentage_correct and percentage_correct <= 9:
+        print(f"Unluckly, you got {ans_correct} out of {len(questions)} which is not the best,\n that is {percentage_correct}% correct, better luck next time")
+    else:
+        print("opps somthing went wrong when processing you data to get your final score.")
+    print("-----")
+    
 
 def menu():
     api_quiz = Quiz_API()  # Create an instance of Quiz_API
