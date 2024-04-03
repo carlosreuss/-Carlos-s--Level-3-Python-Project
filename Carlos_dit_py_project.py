@@ -1,5 +1,10 @@
 import os
 
+
+"""This is the import handler.
+Its job is see if the user has Requests installed on their computer
+as they need it to run the program. If they dont the program
+will tell them what the isuess is and what they need to do to solve it."""
 try:
     import requests  # this can be replaced with any other library that makes HTTP requests
 except ImportError:
@@ -303,7 +308,7 @@ def menu():
                 quiz(questions) # passing the data recived of the querstions from the API to the quiz function
             elif user_choice == 2:
                 print("---bye---")
-                quit()#quits the app and it is also a bulit in py function
+                os._exit(1)  # This end the program using OS that is imported at the begining
             else:
                 print("Please enter a valid option (1 or 2)")
         except ValueError:
