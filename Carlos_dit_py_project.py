@@ -1,12 +1,15 @@
-import requests
-import random
+import requests  # The pugin in that I am using to call the api
+import random  # A plugin that adds random
+
 
 class QuizAPI:
-    '''
-    this calls calls the api and GETS the data called
+    """
 
-    all the xxx below are diffrent strings that connect to create a url for the api so the program can gather
-    the infomation and procces it to create the quiz questions and ans.
+    This calls calls the api and GETS the data called
+
+    All the self.xxx = "xxx" below are diffrent strings that connect to create a url 
+    for the api so the program can gather the infomation and procces it 
+    to create the quiz questions and ans.
 
     self.base_URL : base url : string
     self.hard : hard difficulty questions : string
@@ -15,8 +18,8 @@ class QuizAPI:
     self.ten_questions : ten questions : string
     self.five_question : five questions : string
     self.twenty_question : twenty question : string
-    
-    '''
+    """
+
     def  __init__(self):
         self.base_url = "https://opentdb.com/api.php?"
         self.hard = "&difficulty=hard"
@@ -25,17 +28,21 @@ class QuizAPI:
         self.ten_question = "amount=10"
         self.five_question = "amount=5"
         self.twenty_question = "amount=20"
-        self.sport_cat = ""
-        self.math_cat = ""
-        self.vehicle_cat = ""
+        self.sport_cat = "&category=21"
+        self.math_cat = "&category=19"
+        self.vehicle_cat = "&category=28"
+        self.animals = "&category=27"
+        self.politics = "&category=24"
+
 
     def make_request(self, url):
-        '''
+        """
         This functon sends gains a reponce from the api from the url that has been constsurted
-        and then returns it to the function that called it
-        '''
-        response = requests.get(url) #making a call to the api with the url, in this case the url is the pramaters set of filter the infomation
-        if  response.status_code == 200:
+        and then returns it to the function that called it.
+        """
+
+        response = requests.get(url)  # Making a call to the api with the url, in this case the url is the pramaters set of filter the infomation
+        if response.status_code == 200:
             json_data = response.json()
             return json_data
         else:
@@ -44,7 +51,11 @@ class QuizAPI:
 
 
     def num_question_selector(self):
-        ''' this function is used to select how many questions the user wants to do and then returns the url required to create the overall url that gets sent to the api'''
+        """
+        This function is used to select how many questions the user wants to do and 
+        then returns the url required to create the overall url that gets sent to the api.
+        """
+
         print("")
         while True:
             try:
@@ -62,8 +73,12 @@ class QuizAPI:
             except Exception as e:
                 print("An unexpected error occurred:", e)
 
+
     def difficulty_selector(self):
-        '''This function is used to select the level of question for the user by returning the url fragment that corosponds to the users choice'''
+        """
+        This function is used to select the level of question for the user by returning the url fragment that corosponds to the users choice
+        """
+
         while True:
             try:
                 difficulty = int(input("Option 1: easy\n Options 2: meduim\n Option 3: hard\n\nPlease enter the corosponding number for the option you want\n"))
@@ -80,17 +95,25 @@ class QuizAPI:
             except Exception as e:
                 print("An unexpected error occurred:", e)
 
+
     def cat_selector(self):
-        '''This function is used to select the level of question for the user by returning the url fragment that corrosponds to the users choice'''
+        """
+        This function is used to select the level of question for the user by returning the url fragment that corrosponds to the users choice 
+        """
+
         while True:
             try:
-                difficulty = int(input("Option 1: Sports\n Options 2: Maths\n Option 3: Vehicles\n\nPlease enter the corosponding number for the option you want\n"))
-                if difficulty == 1:
+                category = int(input("Option 1: Sports\n Options 2: Maths\n Option 3: Vehicles\nOption 4: Animals\n Option 5: Politics\nPlease enter the corosponding number for the option you want\n"))
+                if category == 1:
                     return self.sport_cat
-                elif difficulty == 2:
+                elif category == 2:
                     return  self.math_cat
-                elif difficulty == 3:
+                elif category == 3:
                     return self.vehicle_cat
+                elif category == 4:
+                    return self.animals
+                elif category == 5:
+                    return self.politics
                 else:
                     print("please enter a valid integer within the range of 1-3")
             except ValueError:
@@ -98,9 +121,12 @@ class QuizAPI:
             except Exception as e:
                 print("An unexpected error occurred:", e)
 
+
     def create_url(self):
-        '''this function has three varbles that store the three diffrent url fragments that corrosponed to what the user has selected to filter the questions.
-        it then combinds then all together with the base url'''
+        """
+        This function has three varbles that store the three diffrent url fragments that corrosponed to what the user has selected to filter the questions.
+        It then combinds then all together with the base url.
+        """
         print("")
         num_url = self.num_question_selector()
         dif_url = self.difficulty_selector()
@@ -108,14 +134,18 @@ class QuizAPI:
         url = self.base_url + num_url + dif_url + cat_url
         return url
 
+
     def get_question(self):
-        '''gets the questions from the API.
-    it does this by getting the url that was constructed in the create url function,
-    then it sends that url to the get requests function which makes a request to the API,
-    the API then returns the info and store it in the data var. then it gets formatted into the format of the question'''
+        """
+        gets the questions from the API.
+        it does this by getting the url that was constructed in the create url function,
+        then it sends that url to the get requests function which makes a request to the API,
+        the API then returns the info and store it in the data dictonary. 
+        then it gets formatted into the format in to a 2D list where each sub list is containing all of the qestions components.
+        """
         url = self.create_url()
         data = self.make_request(url)
-        if data: #as the data received is in a dictionary, if data: checks if there is anything in it and returns true, an empty dictionary will return false
+        if data:  # As the data received is in a dictionary, if data: checks if there is anything in it and returns true, an empty dictionary will return false
             questions = []
 
             for question_data in data['results']:
@@ -130,16 +160,23 @@ class QuizAPI:
         else:
             return []
 
+
 class Questions:
-    '''
+    """
+
+    The job of this Class is to have the same intances varbles that the questions have to I can uses self.intance_var to manipulate the list of varables in a question
+    to create a nice readable outcome for the user as well as make it possible to answer the questions.
+
     this class is used to orgnze the questions by the 6 diffrent aspects they inclued
+
     self.type = type
     self.type = catgory
     self.difficulty = difficulty
     self.quest = quest
     self.correct_ans =correct_ans
     self.incorrect_ans = incorrect_ans
-    '''
+
+    """
 
     def __init__(self, type, difficulty, category, quest, correct_ans, incorrect_ans):
         self.type = type
@@ -156,15 +193,16 @@ class Questions:
         the correct answer and the wrongs answer are not mixed. its job is to also keep track of the index possion of the correct answer in the list of the shuffled answers
         """
         answers = [self.correct_ans] + self.incorrect_ans
-        random.shuffle(answers)
+        random.shuffle(answers) #.shuffle is a funcgtion bulit into python that suffles things at random when paired with random
         correct_index = answers.index(self.correct_ans)
-        return answers, correct_index
+        return answers, correct_index #returning the shuffled answers list as well as the correct asnwer's index position in that list
+
 
     def display_questions(self):
-        '''
+        """
         this functions job is to not only display the questions, 
         but also send the data to the shuffle_questions function to recuive the shuffled answers and the correct index(the loctation of the correct answer in the list) of the correct anser
-        '''
+        """
         shuffled_answers, correct_index = self.shuffle_questions() # getting the suffled answers as well as the index possition of the correct answer in that list of shuffled answers.
         print("---------")
         print(f"The question: {self.quest}")#printing the question
@@ -195,11 +233,11 @@ class Questions:
 
 
 def quiz(questions):
-    '''
+    """
     The quiz function purpose is to loop through the dat and send question by question to the questions class's functions.
     Then the infomation of if the user got the question correct or not is returned, 0  being incoret and 1 being correct.
     this then gets (summed and divided)*100 to get the percentage of corret ans. Then it prints out a summary of the users performance in a scentace.
-    '''
+    """
     ans_correct = 0 #reseting the amout of correct answers
     for question_data in questions: #looping through the data recived from the api class
         question = Questions(*question_data) # the *question_data is creating a list called question with the use of all of the question data and an instance of the Question class
@@ -208,9 +246,11 @@ def quiz(questions):
     decs_per_correct = ans_correct / len(questions) # creasting a percentage of answer that were corret answers in decimal form
     percentage_correct = decs_per_correct * 100 #making the percanetage to a proper percentage
     print("")
-    '''
+
+    """
     the if stamtent is making sure that eventhing went well, and also creating the measge that the user will recive containing their results.
-    '''
+    """
+
     if percentage_correct >= 80:
         print(f"Well Done, you got {ans_correct} out of {len(questions)} which is outstanding\n that is {percentage_correct}% correct")
     elif 70 <= percentage_correct and percentage_correct <= 79:
@@ -229,13 +269,14 @@ def quiz(questions):
     
 
 def menu():
-    '''
+    """
     The menu function is the fist funtion called in the program.
     A menus job is to allow the user to navagate arround a program.
     In this case the menu system allows the user to choose from two diffrent option which consist of starting a quiz and ending/closeing the program.
     The menu is also the home of the program as it is were the infomation gathered for the QuizAPI gets sent to the Question api via the quiz function.
     This function also uses a while true, try except loop to ensure that the user will get propted to enter a val answer if they do not
-    '''
+    """
+
     api_quiz = QuizAPI()  # Create an instance of QuizAPI
 
     while True:
@@ -251,7 +292,7 @@ def menu():
                 quiz(questions) # passing the data recived of the querstions from the API to the quiz function
             elif user_choice == 2:
                 print("---bye---")
-                break
+                quit()#quits the app and it is also a bulit in py function
             else:
                 print("Please enter a valid option (1 or 2)")
         except ValueError:
