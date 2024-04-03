@@ -1,3 +1,14 @@
+import os
+
+try:
+    import requests  # this can be replaced with any other library that makes HTTP requests
+except ImportError:
+    print("Please install the requests package by running:")
+    print("pip install requests")
+    print("This program cannot be run without the requests package.")
+    print("Exiting.")
+    os._exit(1)
+
 import requests  # The pugin in that I am using to call the api
 import random  # A plugin that adds random
 
