@@ -16,6 +16,7 @@ except ImportError:
 
 import requests  # The pugin in that I am using to call the api
 import random  # A plugin that adds random
+import html  # importing html as the API reuturns text that somestimes has funny letters in it as it need HTML decoding
 
 
 class QuizAPI:
@@ -168,9 +169,9 @@ class QuizAPI:
                 type = question_data["type"]
                 difficulty = question_data["difficulty"]
                 category = question_data["category"]
-                quest = question_data["question"]
-                correct_ans = question_data["correct_answer"]
-                incorrect_ans = question_data["incorrect_answers"]
+                quest = html.unescape(question_data["question"])  # decodes the HTML aspects question_data to make it read able for the user
+                correct_ans = html.unescape(question_data["correct_answer"])  # decodes the HTML aspects question_data to make it read able for the user
+                incorrect_ans = html.unescape(question_data["incorrect_answers"])  # decodes the HTML aspects question_data to make it read able for the user
                 questions.append([type, difficulty, category, quest, correct_ans, incorrect_ans])  # Append as a list
             return(questions)
         else:
