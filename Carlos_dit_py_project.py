@@ -239,6 +239,7 @@ class Questions:
                         return 1
                     else:
                         print("unluckly, incorrect")
+                        print(f"the correct answer was option {correct_index + 1}: {self.correct_ans}")
                         return 0
                 else:
                     print("")
