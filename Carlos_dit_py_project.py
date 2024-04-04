@@ -317,6 +317,8 @@ def menu():
             print("Please enter a valid integer")
         except Exception as e: #this tells the user what the error is if the program fails its self, for example when the data recived frm the API has change its own format reusting to it haveing more or less varbles
             print("An unexpected error occurred:", e)
+            print("")
+            print("check internet conerction as to call the API the program needs Internet, thanks\n")
 
 if __name__ == "__main__":
     menu()
