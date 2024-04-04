@@ -318,6 +318,7 @@ def menu():
         except Exception as e: #this tells the user what the error is if the program fails its self, for example when the data recived frm the API has change its own format reusting to it haveing more or less varbles
             print("An unexpected error occurred:", e)
             print("")
+            print("If the error recived is this:HTTPSConnectionPool(host='opentdb.com', port=443): Max retries exceeded with url: /api.php?amount=5&difficulty=easy&category=21 (Caused by NameResolutionError(<urllib3.connection.HTTPSConnection object at 0x1054b07a0>: Failed to resolve 'opentdb.com' ([Errno 8] nodename nor servname provided, or not known)")
             print("check internet conerction as to call the API the program needs Internet, thanks\n")
 
 if __name__ == "__main__":
