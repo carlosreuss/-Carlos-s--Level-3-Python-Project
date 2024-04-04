@@ -132,7 +132,7 @@ class QuizAPI:
                 elif category == 5:
                     return self.politics
                 else:
-                    print("please enter a valid integer within the range of 1-3")
+                    print("please enter a valid integer within the range of 1-5")
             except ValueError:
                 print("Please enter a valid integer")
             except Exception as e:
